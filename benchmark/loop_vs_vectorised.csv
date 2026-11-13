@@ -1,0 +1,5 @@
+operation,n,output,outputs_match,loop_ms,vectorised_ms,speedup
+split search (one node),300,"best (feature, threshold, gain)",True,81.7639,0.4054,201.6875
+tree predict,5000,predicted labels,True,28.6532,1.1650,24.5942
+running mean/var,5000,per-feature mean and variance (NaN skipped),True,23.8907,0.6621,36.0843
+confusion matrix,5000,k x k count matrix,True,1.6498,0.1403,11.7583

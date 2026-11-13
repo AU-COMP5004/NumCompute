@@ -4,8 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "numcompute"
-version = "0.1.0"
-dependencies = ["numpy"]
+version = "0.2.0"
+description = "NumCompute toolkit and NumCompute-Stream, a streaming decision tree framework (NumPy + matplotlib)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=2.0", "matplotlib>=3.7"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
 
 [tool.setuptools]
-packages = ["numcompute"]
+packages = ["numcompute", "numcompute_stream"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
