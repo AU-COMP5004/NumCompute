@@ -110,26 +110,26 @@ Reproduce with:
 python -m numcompute_stream.benchmarking     # writes benchmark/*.csv and buffer_size_accuracy.png
 ```
 
-Environment: Intel Xeon @ 2.10 GHz (2 cores), Linux, Python 3.13, NumPy 2.5.3; best of 5 runs.
+Environment: Intel Core i7-1165G7 @ 2.80 GHz (4 cores), 16 GB RAM, Windows, Python 3.14.3, NumPy 2.3.5; best of 5 runs.
 
 **(a) Loop vs vectorised.** Both versions get the same input and return the same full output. The benchmark compares the outputs first and only times them if they match (`outputs_match` column in the CSV).
 
 | Operation | Output compared | n | Python loop (ms) | Vectorised (ms) | Speed-up (×) |
 | --- | --- | ---: | ---: | ---: | ---: |
-| Split search (one node, 4 features) | best (feature, threshold, gain) | 300 | 81.76 | 0.41 | 201.7 |
-| Tree predict (depth 8) | predicted labels | 5,000 | 28.65 | 1.17 | 24.6 |
-| Running mean / variance | per-feature mean and variance | 5,000 | 23.89 | 0.66 | 36.1 |
-| Confusion matrix | k × k count matrix | 5,000 | 1.65 | 0.14 | 11.8 |
+| Split search (one node, 4 features) | best (feature, threshold, gain) | 300 | 99.20 | 0.30 | 329.0 |
+| Tree predict (depth 8) | predicted labels | 5,000 | 23.14 | 0.65 | 35.7 |
+| Running mean / variance | per-feature mean and variance | 5,000 | 22.41 | 0.49 | 45.5 |
+| Confusion matrix | k × k count matrix | 5,000 | 1.26 | 0.20 | 6.3 |
 
 **(b) `buffer_size` under streaming.** 6,000 samples in chunks of 100, with a concept drift at sample 3,000. Accuracy is test-then-train (prequential).
 
 | buffer_size | Cumulative accuracy | Retrains | Total retrain time (ms) | Mean retrain time (ms) | First scored chunk |
 | ---: | ---: | ---: | ---: | ---: | ---: |
-| 100 | 0.884 | 60 | 105.4 | 1.76 | 1 |
-| 250 | 0.889 | 20 | 75.3 | 3.77 | 3 |
-| 500 | 0.875 | 12 | 64.9 | 5.41 | 5 |
-| 1000 | 0.823 | 6 | 54.4 | 9.07 | 10 |
-| 2000 | 0.634 | 3 | 51.3 | 17.09 | 20 |
+| 100 | 0.884 | 60 | 75.6 | 1.26 | 1 |
+| 250 | 0.889 | 20 | 57.3 | 2.86 | 3 |
+| 500 | 0.875 | 12 | 47.6 | 3.96 | 5 |
+| 1000 | 0.823 | 6 | 40.5 | 6.75 | 10 |
+| 2000 | 0.634 | 3 | 37.1 | 12.35 | 20 |
 
 Larger buffers retrain less often, so total retraining time falls (it levels off at large buffers because each tree costs O(n log n) in the buffer size). Each retrain is slower, though, because it uses more data. They also react to the drift later. With `buffer_size=2000`, the retrain after the drift mixes the old and new concepts, which is why its accuracy stays low (see `benchmark/buffer_size_accuracy.png`).
 
